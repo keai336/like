@@ -3,6 +3,9 @@ package dialog
 import (
 	"fmt"
 	"github.com/mozillazg/go-pinyin"
+	"io/ioutil"
+	"log"
+	"regexp"
 	"strings"
 	"time"
 	"unicode"
@@ -23,6 +26,46 @@ type Order struct {
 	paracheck  func(para string) bool
 	paramodify func(para string) string
 	run        func(para string) string
+}
+
+type Orderpre struct {
+	name         string `json:"name"`
+	parse        string `json:"parse"`
+	describe     string `json:"describe"`
+	paracheckstr string `json:"paracheck"`
+	path         string
+}
+
+func NewOrder() *Order {
+	order := new(Order)
+	//order.paracheck = func(para string) bool {
+	//	return true
+	//
+	//}
+	order.paramodify = generalmodify
+	return order
+
+}
+
+func NewOrderFromPre(orderpre *Orderpre) *Order {
+	order := NewOrder()
+	if orderpre.paracheckstr != "" {
+		paracheck := func(para string) bool {
+			return regexp.MustCompile(orderpre.paracheckstr).MatchString(para)
+		}
+		order.paracheck = paracheck
+	}
+	paramodify := func(para string) string {
+		replacedStr := generalmodify(para)
+		return fmt.Sprintf("%s ", orderpre.path) + fmt.Sprintf("%s", replacedStr)
+	}
+	order.name = orderpre.name
+	order.parse = orderpre.parse
+	order.describe = orderpre.describe
+	order.paramodify = paramodify
+	order.run = GeneralRunPython
+	return order
+
 }
 
 func translate(para string) string {
@@ -133,4 +176,26 @@ func Init(dialog *Dialog) {
 		run: GeneralRunPython,
 	}.AddtoDic(dialog)
 
+}
+
+func Init2(dialog *Dialog) {
+	dirPath := "../config/pyscrpits/"
+
+	// 读取目录内容
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		log.Fatalf("Error reading directory: %s", err)
+	}
+
+	// 遍历目录下的所有文件和子目录
+	for _, file := range files {
+		path := dirPath + file.Name()
+		newa := NewOrderFromPre(PyscriptToOderpre(path))
+		fmt.Println(newa.paramodify("hello"))
+		fmt.Println(newa.name, newa.parse, newa.describe)
+		fmt.Println(newa.parse)
+		fmt.Println(newa.run(newa.paramodify("hello")))
+		newa.AddtoDic(dialog)
+
+	}
 }

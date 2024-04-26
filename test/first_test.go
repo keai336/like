@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
+	main2 "mywebot/dialog"
 	"regexp"
 	"testing"
 )
@@ -67,54 +68,19 @@ func TestOne(t *testing.T) {
 	//}
 	//ongoingsession := make(map[string]chan string)
 	dip := openwechat.NewMessageMatchDispatcher()
-
-	dip.OnText(func(ctx *openwechat.MessageContext) {
-		fmt.Println(ctx.FromUserName)
-		//a, _ := ctx.Sender()
-		//openwechat.Sech
-		//fmt.Println()
-	})
+	dip.SetAsync(true)
+	a := main2.Dialog{Initpath: "../config/a.dialog"}
+	a.Init()
+	main2.Init2(&a)
+	dip.OnText(a.Reply) /*字典*/
+	fmt.Println(a.Diaglog)
 	bot.MessageHandler = dip.AsMessageHandler()
 	// 注册登陆二维码回调
 	bot.UUIDCallback = openwechat.PrintlnQrcodeUrl
-	reloadStorage := openwechat.NewFileHotReloadStorage("storage.json")
+	reloadStorage := openwechat.NewFileHotReloadStorage("../config/storage.json")
 
 	defer reloadStorage.Close()
-
 	// 执行热登录
 	bot.HotLogin(reloadStorage, openwechat.NewRetryLoginOption())
-	// 登陆
-	//if err := bot.Login(); err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-
-	// 获取登陆的用户
-	self, err := bot.GetCurrentUser()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	//println(self.Friends(true))
-	//println(self.Groups(true))
-
-	// 获取所有的好友
-	friends, err := self.Friends()
-	friendss := friends.SearchByUserName(10, "@a3315313dca96f30df42b0436efe2a03aa17dc2bf304413a122f2fad729e016a")
-	self.SendTextToFriends("hello", 0, friendss...)
-	//for _, v := range friends {
-	//	if v.UserName == "@a3315313dca96f30df42b0436efe2a03aa17dc2bf304413a122f2fad729e016a" {
-	//		println(v.UserName, v.ID(), v.Sex, v.City)
-	//		v.SendText("nihc")
-	//
-	//	}
-	//}
-
-	// 获取所有的群组
-	groups, err := self.Groups()
-	t.Log(groups, err)
-	t.Log("aaa")
-
-	// 阻塞主goroutine, 直到发生异常或者用户主动退出
 	bot.Block()
 }
