@@ -5,7 +5,6 @@ import (
 	"github.com/mozillazg/go-pinyin"
 	"io/ioutil"
 	"log"
-	"regexp"
 	"strings"
 	"time"
 	"unicode"
@@ -16,7 +15,6 @@ var OrderDic = map[string]Order{}
 func (order Order) AddtoDic(dialog *Dialog) {
 	OrderDic[order.name] = order
 	dialog.Diaglog[order.parse] = order.name
-
 }
 
 type Order struct {
@@ -49,12 +47,13 @@ func NewOrder() *Order {
 
 func NewOrderFromPre(orderpre *Orderpre) *Order {
 	order := NewOrder()
-	if orderpre.paracheckstr != "" {
-		paracheck := func(para string) bool {
-			return regexp.MustCompile(orderpre.paracheckstr).MatchString(para)
-		}
-		order.paracheck = paracheck
-	}
+
+	//if orderpre.paracheckstr != "" {
+	//	paracheck := func(para string) bool {
+	//		return regexp.MustCompile(orderpre.paracheckstr).MatchString(para)
+	//	}
+	//	order.paracheck = paracheck
+	//}
 	paramodify := func(para string) string {
 		replacedStr := generalmodify(para)
 		return fmt.Sprintf("%s ", orderpre.path) + fmt.Sprintf("%s", replacedStr)
@@ -191,11 +190,8 @@ func Init2(dialog *Dialog) {
 	for _, file := range files {
 		path := dirPath + file.Name()
 		newa := NewOrderFromPre(PyscriptToOderpre(path))
-		fmt.Println(newa.paramodify("hello"))
-		fmt.Println(newa.name, newa.parse, newa.describe)
-		fmt.Println(newa.parse)
-		fmt.Println(newa.run(newa.paramodify("hello")))
 		newa.AddtoDic(dialog)
 
 	}
+	println(dialog.Diaglog)
 }

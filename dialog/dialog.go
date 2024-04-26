@@ -65,12 +65,13 @@ func (diaglog *Dialog) Reply(message *openwechat.MessageContext) {
 		}
 	} else {
 		if reply, ok := diaglog.Diaglog[name]; !ok {
+			//fmt.Println("不ok")
 			message.ReplyText("wrong order type /menu to get help hwhw")
 		} else {
 			if check := OrderDic[reply].paracheck; check == nil {
 				if modify := OrderDic[reply].paramodify; modify != nil {
 					para = modify(para)
-					fmt.Println(para, "modified")
+					//fmt.Println(para, "modified")
 				}
 				//message.ReplyText(fmt.Sprintf("执行%s", reply))
 				ctx := OrderDic[reply].run(para)

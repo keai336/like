@@ -3,6 +3,7 @@
 name:翻译
 describe:"支持中英日"
 parse:/translate
+paracheck:(?.+
 >>
 """
 import json

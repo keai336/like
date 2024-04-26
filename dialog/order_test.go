@@ -3,8 +3,6 @@ package dialog
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -79,7 +77,7 @@ func TestParseOrder(t *testing.T) {
 
 }
 
-func PyscriptToOderpre(path string) *Orderpre {
+func PyscriptToOderpre1(path string) *Orderpre {
 	{
 		// 打开文件
 		file, err := os.Open(path)
@@ -149,19 +147,19 @@ func PyscriptToOderpre(path string) *Orderpre {
 
 }
 
-func TestInitPythonscripts(t *testing.T) {
-	dirPath := "../config/pyscrpits/"
-
-	// 读取目录内容
-	files, err := ioutil.ReadDir(dirPath)
-	if err != nil {
-		log.Fatalf("Error reading directory: %s", err)
-	}
-
-	// 遍历目录下的所有文件和子目录
-	for _, file := range files {
-		path := dirPath + file.Name()
-		one := NewOrderFromPre(PyscriptToOderpre(path)).AddtoDic()
-
-	}
-}
+//func TestInitPythonscripts(t *testing.T) {
+//	dirPath := "../config/pyscrpits/"
+//
+//	// 读取目录内容
+//	files, err := ioutil.ReadDir(dirPath)
+//	if err != nil {
+//		log.Fatalf("Error reading directory: %s", err)
+//	}
+//
+//	// 遍历目录下的所有文件和子目录
+//	for _, file := range files {
+//		path := dirPath + file.Name()
+//		one := NewOrderFromPre(PyscriptToOderpre(path)).AddtoDic()
+//
+//	}
+//}
