@@ -1,7 +1,7 @@
 """
 <<
-name:nihc
-derscribe:adsflj
+name:nihc,
+describe:adsflj,
 parse:/asjlkfd
 
 >>

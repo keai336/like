@@ -1,3 +1,10 @@
+"""
+<<
+name:地名天气
+describe:给定一个地名返回天气信息但是不太准确
+parse:/weather
+>>
+"""
 import json
 import sys
 import requests as rq
@@ -7,12 +14,15 @@ from openai import OpenAI
 #     api_key="sk-NeCzn2mssAsc7AOD1PnWKqMrSC9M5HkgkFSRsR1NdxHuSAgK",
 #     base_url="https://api.moonshot.cn/v1",
 # )
+import os
+api_key="sk-3sAIcSk9UWxVcOglj5xTy0Lr8EIrHtUaQ5j7M1c22bkVS3cq"
+if key:=os.environ.get("OPENAI_API_KEY"):
+    api_key =key
 client = OpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
-    api_key="sk-9tqFMrPxR4eQVBZfnv2PF1QwJWpKLaaVrbfw4FfkWEdIkl9e",
+    api_key=api_key,
     base_url="https://api.chatanywhere.tech/v1"
 )
-
 def oneroundai(message):
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",

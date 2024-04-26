@@ -1,3 +1,11 @@
+"""
+<<
+name:地址天气
+describe:发地址给天气
+parse:
+
+>>
+"""
 import json
 import sys
 import requests as rq
@@ -26,7 +34,7 @@ def oneroundai(message):
 def discribe_context(json):
     context1 = [
         {"role": "user",
-         "content": "给定你一个json数据,根据数据生成一段天气状况描述,你要像天气播报员一样,条理清晰,给出一些建议,不要说无关的话"},
+         "content": "以后给定你一个json数据,根据数据生成一段天气状况描述,你要像天气播报员一样,简洁明细,给出一些建议,不要说无关的话"},
         {"role": "user", "content": json}
     ]
     return context1
@@ -67,4 +75,4 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 # 接收并打印传递的参数
 for arg in sys.argv[1:]:
-    weatherhourly(orig_para(arg))
+     weatherhourly(orig_para(arg))

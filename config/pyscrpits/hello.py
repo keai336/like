@@ -1,12 +1,10 @@
 import sys
-
 """
-start
-name@
-parse@
-describe@
-
-end
+<<
+name:test
+describe:测试
+parse:/test
+>>
 """
 # 接收并打印传递的参数
 # -*- coding: utf-8 -*-
