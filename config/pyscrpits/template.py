@@ -2,8 +2,8 @@
 <<
 name:testa
 describe:测试
-parse:/cheat
-paracheck:\d{2,5}
+parse:/test
+paracheck:^\d{2,5}$
 >>
 """
 import sys
