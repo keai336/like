@@ -70,12 +70,11 @@ func (diaglog *Dialog) Reply(message *openwechat.MessageContext) {
 			message.ReplyText("wrong order type /menu to get help hwhw")
 		} else {
 			if check := OrderDic[reply].paracheck; check == nil {
-				//fmt.Println(check("asdfa"))
 				modify := OrderDic[reply].paramodify
 				para = modify(para)
 				ctx := OrderDic[reply].run(para)
 				message.ReplyText(ctx)
-				fmt.Println("有修无检")
+				//fmt.Println("有修无检")
 				//fmt.Println(para, "modified")
 			} else {
 				if check(para) {
