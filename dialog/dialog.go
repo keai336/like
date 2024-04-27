@@ -59,6 +59,7 @@ func (diaglog *Dialog) isorder(message *openwechat.MessageContext) (string, stri
 }
 
 func (diaglog *Dialog) Reply(message *openwechat.MessageContext) {
+	//我靠写的啥啊看不懂了
 	if name, para, ok := diaglog.isorder(message); !ok {
 		if reply, ok := diaglog.Diaglog[message.Content]; ok {
 			message.ReplyText(reply)
@@ -69,17 +70,17 @@ func (diaglog *Dialog) Reply(message *openwechat.MessageContext) {
 			message.ReplyText("wrong order type /menu to get help hwhw")
 		} else {
 			if check := OrderDic[reply].paracheck; check == nil {
-				if modify := OrderDic[reply].paramodify; modify != nil {
-					para = modify(para)
-					//fmt.Println(para, "modified")
-				}
-				//message.ReplyText(fmt.Sprintf("执行%s", reply))
+				//fmt.Println(check("asdfa"))
+				modify := OrderDic[reply].paramodify
+				para = modify(para)
 				ctx := OrderDic[reply].run(para)
 				message.ReplyText(ctx)
+				fmt.Println("有修无检")
+				//fmt.Println(para, "modified")
 			} else {
 				if check(para) {
 					//message.ReplyText(fmt.Sprintf("执行%s,参数为%s", reply, para))
-					ctx := OrderDic[reply].run(para)
+					ctx := OrderDic[reply].run(OrderDic[reply].paramodify(para))
 					message.ReplyText(ctx)
 
 				} else {

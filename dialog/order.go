@@ -5,6 +5,7 @@ import (
 	"github.com/mozillazg/go-pinyin"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 	"unicode"
@@ -48,12 +49,12 @@ func NewOrder() *Order {
 func NewOrderFromPre(orderpre *Orderpre) *Order {
 	order := NewOrder()
 
-	//if orderpre.paracheckstr != "" {
-	//	paracheck := func(para string) bool {
-	//		return regexp.MustCompile(orderpre.paracheckstr).MatchString(para)
-	//	}
-	//	order.paracheck = paracheck
-	//}
+	if orderpre.paracheckstr != "" {
+		paracheck := func(para string) bool {
+			return regexp.MustCompile(orderpre.paracheckstr).MatchString(para)
+		}
+		order.paracheck = paracheck
+	}
 	paramodify := func(para string) string {
 		replacedStr := generalmodify(para)
 		return fmt.Sprintf("%s ", orderpre.path) + fmt.Sprintf("%s", replacedStr)
