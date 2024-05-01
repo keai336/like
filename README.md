@@ -1,4 +1,4 @@
-# an ambitiously plugable WeChat bot
+# an ambitiously plugable WeChat bot based on [openweChat](https://github.com/eatmoreapple/openwechat)
 ### Describe
 you can add all you scripts that are able to run on the terminal from modifying the heads of them as plugs
 
