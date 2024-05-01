@@ -90,16 +90,16 @@ func TestS(t *testing.T) {
 type OneSession struct {
 	In      chan string
 	Out     chan string
-	Alive   bool
 	Message *openwechat.Message
+	Box     *map[string]*OneSession
 }
 
-func NewSession(message *openwechat.Message) *OneSession {
+func NewSession(message *openwechat.Message, box *map[string]*OneSession) *OneSession {
 	session := new(OneSession)
 	session.In = make(chan string)
 	session.Out = make(chan string)
 	session.Message = message
-	session.Alive = true
+	session.Box = box
 	return session
 }
 func TestWriter(t *testing.T) {
@@ -130,35 +130,39 @@ func TestWriter(t *testing.T) {
 }
 
 func (onesession *OneSession) Run() {
-	cmd := exec.Command("python", "E:\\未完成\\mywebot\\learn\\btime.py")
+	cmd := exec.Command("python", "E:\\未完成\\mywebot\\learn\\test2.py")
 	in, _ := cmd.StdinPipe()
-	//cmd.Stdout = os.Stdout
 	out, _ := cmd.StdoutPipe()
-	cmd.Start()
+	//cmd.Start()
+	err := cmd.Start()
+	if err != nil {
+		onesession.Message.ReplyText(fmt.Sprintln(err))
+		return
+	}
 	reader := bufio.NewReader(out)
-	line, err := reader.ReadString('§')
+	line, err := reader.ReadString('~')
 	if err != nil && err != io.EOF {
 		fmt.Println("读取输出数据时出错:", err)
 		return
 	}
-	onesession.Message.ReplyText(strings.Replace(line, "§", "", 1))
+	onesession.Message.ReplyText(strings.Replace(line, "~", "", 1))
 	for {
 		mes := <-onesession.In
 		if mes != "quit" {
 			io.WriteString(in, fmt.Sprintf("%s\n", mes))
-			line, err := reader.ReadString('§')
+			line, err := reader.ReadString('~')
 			if err != nil && err != io.EOF {
 				fmt.Println("读取输出数据时出错:", err)
 				return
 			}
-			onesession.Out <- strings.Replace(line, "§", "", 1)
+			onesession.Out <- strings.Replace(line, "~", "", 1)
 		} else {
 			break
 		}
 	}
 	cmd.Process.Kill()
+	delete(*onesession.Box, onesession.Message.FromUserName)
 	onesession.Out <- "结束"
-	onesession.Alive = false
 }
 
 func TestOnbot(t *testing.T) {
@@ -180,29 +184,20 @@ func TestOnbot(t *testing.T) {
 		fmt.Println("当前 goroutine 数量:", num)
 		fmt.Println(box)
 		if regexp.MustCompile("/birth").MatchString(message.Content) {
-			if order, ok := box[message.FromUserName]; !ok {
+			if _, ok := box[message.FromUserName]; !ok {
 				return true
-			} else {
-				if order.Alive {
-					message.ReplyText("there is a ongoing order")
-				} else {
-					return true
-				}
 			}
 		}
 		return false
 
 	},
 		func(ctx *openwechat.MessageContext) {
-			box[ctx.FromUserName] = NewSession(ctx.Message)
+			box[ctx.FromUserName] = NewSession(ctx.Message, &box)
 			box[ctx.FromUserName].Run()
 		})
 	dip.RegisterHandler(func(message *openwechat.Message) bool {
-		session, ok := box[message.FromUserName]
-		if ok {
-			return session.Alive
-		}
-		return false
+		_, ok := box[message.FromUserName]
+		return ok
 	},
 		func(ctx *openwechat.MessageContext) {
 
