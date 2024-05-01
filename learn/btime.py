@@ -224,7 +224,7 @@ def chose_items(di, mum=-1, notify=Notify(), outbreak="q", connect=None):
 
         item, dics = get_items(di)
         if_print(connect, item)
-        q = if_input(connect, "请选择")
+        q = if_input(connect, "§请选择")
         if q:
             if q == outbreak:
                 break
