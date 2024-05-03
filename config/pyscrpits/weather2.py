@@ -2,7 +2,7 @@
 <<
 name:地址天气
 describe:发地址给天气
-parse:
+parse:位置
 
 >>
 """
@@ -10,11 +10,8 @@ import json
 import sys
 import requests as rq
 from openai import OpenAI
+sys.stdout.reconfigure(encoding='utf-8')
 
-# client = OpenAI(
-#     api_key="sk-NeCzn2mssAsc7AOD1PnWKqMrSC9M5HkgkFSRsR1NdxHuSAgK",
-#     base_url="https://api.moonshot.cn/v1",
-# )
 client = OpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
     api_key="sk-9tqFMrPxR4eQVBZfnv2PF1QwJWpKLaaVrbfw4FfkWEdIkl9e",
@@ -43,11 +40,11 @@ def weatherhourly(inp):
     u = 'https://api.caiyunapp.com/v2.6'
     token = 'yctDWm6mKtnILZI4'
     ls = inp.split(",")
-    locat = "{},{}".format(ls[1],ls[2])
+    locat = "{},{}".format(ls[2],ls[1])
     name = ls[0]
     rand = "hourly?hourlysteps=1"
     url ='/'.join([u,token,locat,rand])
-    # print(url)
+#     print(url)
     r = rq.get(url)
     if r.status_code == 200:
         message = r.json()["result"]["hourly"]
@@ -71,8 +68,9 @@ def orig_para(para):
     return para
 # 接收并打印传递的参数
 # -*- coding: utf-8 -*-
-sys.stdout.reconfigure(encoding='utf-8')
 
 # 接收并打印传递的参数
-for arg in sys.argv[1:]:
-     weatherhourly(orig_para(arg))
+arg=sys.argv[1]
+# print(orig_para(arg))
+weatherhourly(orig_para(arg))
+# print(orig_para(arg))

@@ -1,7 +1,16 @@
+"""
+<<
+name:随机一句
+describe:随机一句话
+parse:拍一拍
+
+>>
+"""
 import random
 
 import requests as rq
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
 
 # 示例数
 
@@ -59,7 +68,7 @@ def zen_of_git():
         print(g.text)
     except rq.exceptions.ConnectionError:
         print("嘿嘿",end="")
-        
+
 def ai_English():
     import os
     api_key="sk-3sAIcSk9UWxVcOglj5xTy0Lr8EIrHtUaQ5j7M1c22bkVS3cq"
@@ -85,5 +94,4 @@ def ai_English():
     print(completion.choices[0].message.content,end="")
 
 ls = [zen_of_git,one_saying,one_saying2,ai_English,ai_English,ai_English]
-sys.stdout.reconfigure(encoding='utf-8')
 ls[random.randint(0,len(ls)-1)]()
