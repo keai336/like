@@ -1,7 +1,7 @@
 """
 <<
 name:翻译
-describe:"支持中英日"
+describe:翻译,支持中英日,格式 /translate+句子+[-c(转为中文) -j(转为日文) -e(转为英文)] 不加后缀自动判断
 parse:/translate
 >>
 """

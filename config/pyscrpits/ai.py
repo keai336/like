@@ -1,7 +1,7 @@
 """
 <<
 name:aibot
-describe:问答ai
+describe:问答ai,/ai+你要问的内容,就可以得到回答
 parse:/ai
 >>
 """

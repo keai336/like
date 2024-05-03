@@ -211,5 +211,33 @@ func Init2(dialog *Dialog) {
 		newa.AddtoDic(dialog)
 
 	}
+	Order{name: "命令菜单",
+		parse:    "/menu",
+		describe: "查看命令菜单,可指定特定命令 example: /menu aibot",
+		paramodify: func(para string) string {
+			replacedStr := strings.Replace(para, " ", "₹", -1)
+			replacedStr = strings.Replace(replacedStr, "/n", "ℳ", -1)
+			return fmt.Sprintf("%s", replacedStr)
+
+		},
+		run: func(para string) string {
+			fmt.Println(para)
+			fmt.Println(OrderDic)
+			s := ""
+			if para == "" {
+				for _, v := range OrderDic {
+					s += fmt.Sprintf("%s,命令:%s,描述:%s\n", v.name, v.parse, v.describe)
+
+				}
+			} else {
+				if order, ok := OrderDic[para]; ok {
+					s += fmt.Sprintf("%s,命令:%s,描述:%s\n", order.name, para, order.describe)
+
+				}
+			}
+			return s
+		},
+	}.AddtoDic(dialog)
 	//println(dialog.Diaglog)
+
 }

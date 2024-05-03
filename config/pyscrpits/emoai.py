@@ -1,7 +1,7 @@
 """
 <<
 name:emoai
-describe:分析情绪的ai
+describe:分析情绪的ai,格式 /emoa+句子 分析句子的情绪
 parse:/emoa
 >>
 """

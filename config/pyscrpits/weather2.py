@@ -1,7 +1,7 @@
 """
 <<
 name:地址天气
-describe:发地址给天气
+describe:发送位置,返回天气信息 格式 一条位置信息
 parse:位置
 
 >>

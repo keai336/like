@@ -1,7 +1,7 @@
 """
 <<
 name:音乐下载
-describe:输入音乐名字,下载音乐
+describe:输入音乐名字,下载音乐 格式 /music+描述音乐的文本
 parse:/music
 >>
 """

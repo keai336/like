@@ -1,7 +1,7 @@
 """
 <<
 name:地名天气
-describe:给定一个地名返回天气信息但是不太准确
+describe:给定一个地名返回天气信息但是不太准确,通过ai根据地名获得的经纬,然后调用彩云api 格式 /weather+地名
 parse:/weather
 >>
 """

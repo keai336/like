@@ -1,7 +1,7 @@
 """
 <<
 name:撤回
-describe:嘿嘿
+describe:撤回消息后自动回复
 parse:撤回
 
 >>

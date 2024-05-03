@@ -1,7 +1,7 @@
 """
 <<
 name:美图
-describe:随机美图
+describe:返回随机美图,格式 /mt+[1-9(指定数量)]
 parse:/mt
 paracheck:^\d?$
 >>
