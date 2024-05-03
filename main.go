@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
 	main2 "mywebot/dialog"
+	"runtime"
 )
 
 func main() {
@@ -137,14 +138,16 @@ func main() {
 	a := main2.Dialog{Initpath: "../config/a.dialog"}
 	a.Init()
 	main2.Init2(&a)
-	dip.OnText(a.Reply) /*字典*/
-	//fmt.Println(a.Diaglog)
+	dip.RegisterHandler(func(message *openwechat.Message) bool {
+		num := runtime.NumGoroutine()
+		fmt.Println("当前 goroutine 数量:", num)
+		return true
+	},
+		a.Reply)
+	fmt.Println(a.Diaglog)
 	bot.MessageHandler = dip.AsMessageHandler()
-	// 注册登陆二维码回调
-	bot.UUIDCallback = openwechat.PrintlnQrcodeUrl
-	if err := bot.Login(); err != nil {
-		fmt.Println(err)
-		return
-	}
+	reloadStorage := openwechat.NewFileHotReloadStorage("storage.json")
+	defer reloadStorage.Close()
+	bot.PushLogin(reloadStorage, openwechat.NewRetryLoginOption())
 	bot.Block()
 }

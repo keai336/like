@@ -211,5 +211,5 @@ func Init2(dialog *Dialog) {
 		newa.AddtoDic(dialog)
 
 	}
-	println(dialog.Diaglog)
+	//println(dialog.Diaglog)
 }

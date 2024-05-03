@@ -5,6 +5,7 @@ import (
 	"github.com/eatmoreapple/openwechat"
 	main2 "mywebot/dialog"
 	"regexp"
+	"runtime"
 	"testing"
 )
 
@@ -58,29 +59,21 @@ func match(message *openwechat.Message) bool {
 
 func TestOne(t *testing.T) {
 	bot := openwechat.DefaultBot(openwechat.Desktop) // 桌面模式
-
-	// 注册消息处理函数
-	//bot.MessageHandler = func(msg *openwechat.Message) {
-	//	println(msg.FromUserName)
-	//	if msg.IsText() && msg.Content == "ping" && msg.FromUserName == "珂爱336" {
-	//		msg.ReplyText("pong")
-	//	}
-	//}
-	//ongoingsession := make(map[string]chan string)
 	dip := openwechat.NewMessageMatchDispatcher()
 	dip.SetAsync(true)
 	a := main2.Dialog{Initpath: "../config/a.dialog"}
 	a.Init()
 	main2.Init2(&a)
-	dip.OnText(a.Reply) /*字典*/
+	dip.RegisterHandler(func(message *openwechat.Message) bool {
+		num := runtime.NumGoroutine()
+		fmt.Println("当前 goroutine 数量:", num)
+		return true
+	},
+		a.Reply)
 	fmt.Println(a.Diaglog)
 	bot.MessageHandler = dip.AsMessageHandler()
-	// 注册登陆二维码回调
-	bot.UUIDCallback = openwechat.PrintlnQrcodeUrl
-	reloadStorage := openwechat.NewFileHotReloadStorage("../config/storage.json")
-
+	reloadStorage := openwechat.NewFileHotReloadStorage("storage.json")
 	defer reloadStorage.Close()
-	// 执行热登录
-	bot.HotLogin(reloadStorage, openwechat.NewRetryLoginOption())
+	bot.PushLogin(reloadStorage, openwechat.NewRetryLoginOption())
 	bot.Block()
 }
