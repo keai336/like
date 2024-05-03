@@ -38,7 +38,7 @@ func (diaglog *Dialog) Init() {
 
 		}
 	}
-	fmt.Println(diaglog.Diaglog)
+	//fmt.Println(diaglog.Diaglog)
 
 	// 检查Scanner是否在读取过程中出错
 	if err := scanner.Err(); err != nil {
@@ -49,7 +49,20 @@ func (diaglog *Dialog) Init() {
 func (diaglog *Dialog) isorder(message *openwechat.MessageContext) (string, string, bool) {
 	recompiled := regexp.MustCompile("^(/[a-z]+) ?((?s).*)$")
 	if !recompiled.MatchString(message.Content) {
-		return "", "", false
+		switch {
+		case message.IsLocation():
+			return "位置", message.Content + message.Url, true
+		case message.IsPaiYiPai():
+			return "拍一拍", "", true
+		case message.IsRecalled():
+			return "撤回", "", true
+		case message.IsAt():
+			return "at", message.Content, true
+		case message.IsReceiveRedPacket():
+			return "红包", "", true
+		default:
+			return "", "", false
+		}
 	} else {
 		contend := recompiled.FindStringSubmatch(message.Content)
 		name := contend[1]
@@ -60,30 +73,29 @@ func (diaglog *Dialog) isorder(message *openwechat.MessageContext) (string, stri
 
 func (diaglog *Dialog) Reply(message *openwechat.MessageContext) {
 	//我靠写的啥啊看不懂了
-	if name, para, ok := diaglog.isorder(message); !ok {
+	if parse, para, ok := diaglog.isorder(message); !ok {
 		if reply, ok := diaglog.Diaglog[message.Content]; ok {
 			message.ReplyText(reply)
 		}
 	} else {
-		if reply, ok := diaglog.Diaglog[name]; !ok {
-			//fmt.Println("不ok")
+		if replyfuncname, ok := diaglog.Diaglog[parse]; !ok {
 			message.ReplyText("wrong order type /menu to get help hwhw")
 		} else {
-			if check := OrderDic[reply].paracheck; check == nil {
-				modify := OrderDic[reply].paramodify
+			if check := OrderDic[replyfuncname].paracheck; check == nil {
+				modify := OrderDic[replyfuncname].paramodify
 				para = modify(para)
-				ctx := OrderDic[reply].run(para)
+				ctx := OrderDic[replyfuncname].run(para)
 				message.ReplyText(ctx)
 				//fmt.Println("有修无检")
 				//fmt.Println(para, "modified")
 			} else {
 				if check(para) {
-					//message.ReplyText(fmt.Sprintf("执行%s,参数为%s", reply, para))
-					ctx := OrderDic[reply].run(OrderDic[reply].paramodify(para))
+					//message.ReplyText(fmt.Sprintf("执行%s,参数为%s", replyfuncname, para))
+					ctx := OrderDic[replyfuncname].run(OrderDic[replyfuncname].paramodify(para))
 					message.ReplyText(ctx)
 
 				} else {
-					message.ReplyText(fmt.Sprintf("order %s gets wrong parameters,type /help %s to get help hwhw", OrderDic[reply].parse, OrderDic[reply].parse))
+					message.ReplyText(fmt.Sprintf("order %s gets wrong parameters,type /help %s to get help hwhw", OrderDic[replyfuncname].parse, OrderDic[replyfuncname].parse))
 				}
 			}
 		}
