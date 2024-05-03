@@ -55,8 +55,14 @@ func NewOrderFromPre(orderpre *Orderpre) *Order {
 		}
 		order.paracheck = paracheck
 	}
+	modify := generalmodify
+	switch orderpre.parse {
+	case "位置":
+		modify = locationmodify
+
+	}
 	paramodify := func(para string) string {
-		replacedStr := generalmodify(para)
+		replacedStr := modify(para)
 		return fmt.Sprintf("%s ", orderpre.path) + fmt.Sprintf("%s", replacedStr)
 	}
 	order.name = orderpre.name
@@ -80,6 +86,17 @@ func generalmodify(para string) string {
 	replacedStr := strings.Replace(para, " ", "₹", -1)
 	replacedStr = strings.Replace(replacedStr, "/n", "ℳ", -1)
 	return replacedStr
+}
+
+func locationmodify(para string) string {
+	paras := strings.Split(para, "`")
+	url := paras[1]
+	content := paras[0]
+	r := regexp.MustCompile("coord=(-?[0-9.]+),(-?[0-9.]+)")
+	fi := r.FindStringSubmatch(url)
+	x, y := fi[1], fi[2]
+	locationname := regexp.MustCompile("(.+?)[:/]").FindStringSubmatch(content)[1]
+	return fmt.Sprintf("%s,%s,%s", locationname, x, y)
 }
 
 func Init(dialog *Dialog) {
