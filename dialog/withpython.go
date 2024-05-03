@@ -103,32 +103,38 @@ func PyscriptToOderpre(path string) *Orderpre {
 		//fmt.Println("前10行内容为:")
 		//fmt.Println(content)
 		r := regexp.MustCompile("(?s)\"\"\"\n<<(.+?)>>\n\"\"\"")
-		result := r.FindAllStringSubmatch(content, -1)
-		init_value := result[0][1]
-		lines := strings.Split(init_value, "\n")
+		if r.MatchString(content) {
+			result := r.FindAllStringSubmatch(content, -1)
+			init_value := result[0][1]
+			lines := strings.Split(init_value, "\n")
 
-		// 初始化 Order 结构体
-		orderpre := new(Orderpre)
+			// 初始化 Order 结构体
+			orderpre := new(Orderpre)
+			for _, line := range lines {
+				parts := strings.Split(line, ":")
+				if len(parts) == 2 {
+					switch parts[0] {
+					case "name":
+						orderpre.name = parts[1]
+					case "parse":
+						orderpre.parse = parts[1]
+					case "describe":
+						orderpre.describe = parts[1]
+					case "paracheck":
+						orderpre.paracheckstr = parts[1]
+
+					}
+				}
+			}
+			orderpre.path = path
+			fmt.Printf("%s :%s 初始化成功\n", orderpre.name, orderpre.path)
+			return orderpre
+
+		}
+		fmt.Printf("%s 初始化失败\n", path)
+		return nil
 
 		// 遍历每行，提取字段值
-		for _, line := range lines {
-			parts := strings.Split(line, ":")
-			if len(parts) == 2 {
-				switch parts[0] {
-				case "name":
-					orderpre.name = parts[1]
-				case "parse":
-					orderpre.parse = parts[1]
-				case "describe":
-					orderpre.describe = parts[1]
-				case "paracheck":
-					orderpre.paracheckstr = parts[1]
-
-				}
-				orderpre.path = path
-			}
-		}
-		return orderpre
 
 	}
 

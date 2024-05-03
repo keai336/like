@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
+	"mywebot/plus"
 	"os"
 	"regexp"
 )
@@ -75,27 +76,30 @@ func (diaglog *Dialog) Reply(message *openwechat.MessageContext) {
 	//我靠写的啥啊看不懂了
 	if parse, para, ok := diaglog.isorder(message); !ok {
 		if reply, ok := diaglog.Diaglog[message.Content]; ok {
-			message.ReplyText(reply)
+			//message.ReplyText(reply)
+			plus.AutoReply(message, reply)
 		}
 	} else {
 		if replyfuncname, ok := diaglog.Diaglog[parse]; !ok {
-			message.ReplyText("wrong order type /menu to get help hwhw")
+			//message.ReplyText("wrong order type /menu to get help hwhw")
+			plus.AutoReply(message, "wrong order type /menu to get help hwhw")
 		} else {
 			if check := OrderDic[replyfuncname].paracheck; check == nil {
 				modify := OrderDic[replyfuncname].paramodify
 				para = modify(para)
-				ctx := OrderDic[replyfuncname].run(para)
-				message.ReplyText(ctx)
+				rpl := OrderDic[replyfuncname].run(para)
+				//message.ReplyText(rpl)
+				plus.AutoReply(message, rpl)
 				//fmt.Println("有修无检")
 				//fmt.Println(para, "modified")
 			} else {
 				if check(para) {
 					//message.ReplyText(fmt.Sprintf("执行%s,参数为%s", replyfuncname, para))
-					ctx := OrderDic[replyfuncname].run(OrderDic[replyfuncname].paramodify(para))
-					message.ReplyText(ctx)
-
+					rpl := OrderDic[replyfuncname].run(OrderDic[replyfuncname].paramodify(para))
+					//message.ReplyText(rpl)
+					plus.AutoReply(message, rpl)
 				} else {
-					message.ReplyText(fmt.Sprintf("order %s gets wrong parameters,type /help %s to get help hwhw", OrderDic[replyfuncname].parse, OrderDic[replyfuncname].parse))
+					plus.AutoReply(message, fmt.Sprintf("order %s gets wrong parameters,type /help %s to get help hwhw", OrderDic[replyfuncname].parse, OrderDic[replyfuncname].parse))
 				}
 			}
 		}
