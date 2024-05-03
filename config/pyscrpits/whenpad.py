@@ -2,7 +2,7 @@
 <<
 name:随机一句
 describe:啪一啪返回随机一句话
-parse:拍一拍
+parse:@拍一拍@
 
 >>
 """

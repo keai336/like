@@ -52,15 +52,15 @@ func (diaglog *Dialog) isorder(message *openwechat.MessageContext) (string, stri
 	if !recompiled.MatchString(message.Content) {
 		switch {
 		case message.IsLocation():
-			return "位置", message.Content + "`" + message.Url, true
+			return "@位置@", message.Content + "`" + message.Url, true
 		case message.IsPaiYiPai():
-			return "拍一拍", "", true
+			return "@拍一拍@", "", true
 		case message.IsRecalled():
-			return "撤回", "", true
+			return "@撤回@", "", true
 		case message.IsAt():
-			return "at", message.Content, true
+			return "@at@", message.Content, true
 		case message.IsReceiveRedPacket():
-			return "红包", "", true
+			return "@红包@", "", true
 		default:
 			return "", "", false
 		}

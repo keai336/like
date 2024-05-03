@@ -57,7 +57,7 @@ func NewOrderFromPre(orderpre *Orderpre) *Order {
 	}
 	modify := generalmodify
 	switch orderpre.parse {
-	case "位置":
+	case "@位置@":
 		modify = locationmodify
 
 	}
