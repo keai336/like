@@ -5,6 +5,11 @@ describe:问答ai
 parse:/ai
 >>
 """
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+def orig_para(para):
+    para= para.replace("₹"," ").replace("ℳ","/n")
+    return para
 from openai import OpenAI
 
 # client = OpenAI(
@@ -21,9 +26,6 @@ client = OpenAI(
     api_key=api_key,
     base_url="https://api.chatanywhere.tech/v1"
 )
-def orig_para(para):
-    para= para.replace("₹"," ").replace("ℳ","/n")
-    return para
 def oneround(inp):
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -36,12 +38,5 @@ def oneround(inp):
     )
 
     print(completion.choices[0].message.content,end="")
-import sys
-
-# 接收并打印传递的参数
-# -*- coding: utf-8 -*-
-sys.stdout.reconfigure(encoding='utf-8')
-
-# 接收并打印传递的参数
-for arg in sys.argv[1:]:
-    oneround(orig_para(arg))
+arg=sys.argv[1]
+oneround(orig_para(arg))

@@ -6,11 +6,17 @@ parse:位置
 
 >>
 """
-import json
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
+def orig_para(para):
+    para= para.replace("₹"," ").replace("ℳ","/n")
+    return para
+arg=orig_para(sys.argv[1])
+
+
+import json
 import requests as rq
 from openai import OpenAI
-sys.stdout.reconfigure(encoding='utf-8')
 
 client = OpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
@@ -63,14 +69,4 @@ def weatherhourly(inp):
     r.close()
 
 
-def orig_para(para):
-    para= para.replace("₹"," ").replace("ℳ","/n")
-    return para
-# 接收并打印传递的参数
-# -*- coding: utf-8 -*-
-
-# 接收并打印传递的参数
-arg=sys.argv[1]
-# print(orig_para(arg))
-weatherhourly(orig_para(arg))
-# print(orig_para(arg))
+weatherhourly(arg)

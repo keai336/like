@@ -5,8 +5,15 @@ describe:给定一个地名返回天气信息但是不太准确
 parse:/weather
 >>
 """
-import json
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
+def orig_para(para):
+    para= para.replace("₹"," ").replace("ℳ","/n")
+    return para
+arg=orig_para(sys.argv[1])
+
+
+import json
 import requests as rq
 from openai import OpenAI
 
@@ -73,14 +80,5 @@ def weatherhourly(inp):
     r.close()
 
 
-def orig_para(para):
-    para= para.replace("₹"," ").replace("ℳ","/n")
-    return para
 # 接收并打印传递的参数
-# -*- coding: utf-8 -*-
-sys.stdout.reconfigure(encoding='utf-8')
-
-# 接收并打印传递的参数
-for arg in sys.argv[1:]:
-    weatherhourly(orig_para(arg))
-# weatherhourly(orig_para(input()))
+weatherhourly(arg)

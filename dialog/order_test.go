@@ -10,7 +10,7 @@ import (
 )
 
 func TestParseOrder(t *testing.T) {
-	path := "aiapi.py"
+	path := "emoai.py"
 	// 打开文件
 	file, err := os.Open(path)
 	if err != nil {

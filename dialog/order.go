@@ -158,7 +158,7 @@ func Init(dialog *Dialog) {
 			//fmt.Println(replacedStr)
 
 			//return "F:\\micloud\\coding\\py\\pythonProject1\\翻译.py " + fmt.Sprintf("%s", replacedStr)
-			return "../config/pyscrpits/aiapi.py " + fmt.Sprintf("%s", replacedStr)
+			return "../config/pyscrpits/emoai.py " + fmt.Sprintf("%s", replacedStr)
 
 		},
 		run: GeneralRunPython,
@@ -172,7 +172,7 @@ func Init(dialog *Dialog) {
 			//fmt.Println(replacedStr)
 
 			//return "F:\\micloud\\coding\\py\\pythonProject1\\翻译.py " + fmt.Sprintf("%s", replacedStr)
-			return "../config/pyscrpits/chatg.py " + fmt.Sprintf("%s", replacedStr)
+			return "../config/pyscrpits/ai.py " + fmt.Sprintf("%s", replacedStr)
 
 		},
 		run: GeneralRunPython,

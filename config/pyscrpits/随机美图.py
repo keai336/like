@@ -7,9 +7,16 @@ paracheck:^\d?$
 >>
 """
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
+def orig_para(para):
+    para= para.replace("₹"," ").replace("ℳ","/n")
+    return para
+arg=orig_para(sys.argv[1])
+
+
+
 import random
 import os
-sys.stdout.reconfigure(encoding='utf-8')
 path = "C:\\Users\keai3\Desktop\Beauty-pictures-crawling-master\美女图集"
 def one():
     whos = os.listdir(path)
@@ -18,7 +25,6 @@ def one():
     which = whichs[random.randint(0,len(whichs)-1)]
     one = "/".join([path,who,which])
     print(f"~imag:{one}")
-arg = arg=sys.argv[1]
 if arg:
     for i in range(int(arg)):
         one()

@@ -6,13 +6,16 @@ parse:拍一拍
 
 >>
 """
-import random
-
-import requests as rq
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
+def orig_para(para):
+    para= para.replace("₹"," ").replace("ℳ","/n")
+    return para
+arg=orig_para(sys.argv[1])
 
-# 示例数
+
+import random
+import requests as rq
 
 def one_saying():
     def format_hitokoto(data):

@@ -5,15 +5,20 @@ describe:"支持中英日"
 parse:/translate
 >>
 """
-import json
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
+def orig_para(para):
+    para= para.replace("₹"," ").replace("ℳ","/n")
+    return para
+arg=orig_para(sys.argv[1])
+
+import json
 import re
 import requests
 
 default_dic = {"e":"zh",
                "j":"zh",
                "c":"en"}
-sys.stdout.reconfigure(encoding='utf-8')
 
 def tranlate(source, direction):
     url = "http://api.interpreter.caiyunai.com/v1/translator"
@@ -38,11 +43,6 @@ def tranlate(source, direction):
 
     return json.loads(response.text)["target"]
 
-
-
-def orig_para(para):
-    para= para.replace("₹"," ").replace("ℳ","/n")
-    return para
 
 def analyze_language(text):
     # 定义正则表达式来匹配中文、英文和日文字符
@@ -71,7 +71,7 @@ def analyze_language(text):
     return max_value
 
 
-def towhhich(arg):
+def towhich(arg):
     if arg.endswith("-j"):
         return tranlate(arg[:-2], "auto2ja")
     if arg.endswith("-e"):
@@ -80,5 +80,4 @@ def towhhich(arg):
         return tranlate(arg[:-2], "auto2zh")
     return tranlate(arg[:], "auto2{}".format(default_dic[analyze_language(arg[:])]))
 
-for arg in sys.argv[1:]:
-    print(towhhich(orig_para(arg)),end="")
+print(towhich(arg))
