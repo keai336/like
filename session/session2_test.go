@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
 	"io"
+	"mywebot/plus"
 	"os"
 	"os/exec"
 	"regexp"
@@ -155,6 +156,14 @@ func (onesession *OneSession) Run() {
 				fmt.Println("读取输出数据时出错:", err)
 				return
 			}
+			if strings.Contains(line, "结束") {
+				//fmt.Println("结束")
+				cmd.Process.Kill()
+				delete(*onesession.Box, onesession.Message.FromUserName)
+				onesession.Out <- strings.Replace(line, "~", "", 1)
+				//onesession.Message.ReplyText(strings.Replace(line, "~", "", 1))
+				return
+			}
 			onesession.Out <- strings.Replace(line, "~", "", 1)
 		} else {
 			break
@@ -183,7 +192,7 @@ func TestOnbot(t *testing.T) {
 		num := runtime.NumGoroutine()
 		fmt.Println("当前 goroutine 数量:", num)
 		fmt.Println(box)
-		if regexp.MustCompile("/birth").MatchString(message.Content) {
+		if regexp.MustCompile("^/birth$").MatchString(message.Content) {
 			if _, ok := box[message.FromUserName]; !ok {
 				return true
 			}
@@ -202,7 +211,8 @@ func TestOnbot(t *testing.T) {
 		func(ctx *openwechat.MessageContext) {
 
 			box[ctx.FromUserName].In <- ctx.Content
-			ctx.ReplyText(<-box[ctx.FromUserName].Out)
+			plus.AutoReply(ctx, <-box[ctx.FromUserName].Out)
+			//ctx.ReplyText(<-box[ctx.FromUserName].Out)
 		})
 	bot.MessageHandler = dip.AsMessageHandler()
 	// 注册登陆二维码回调
