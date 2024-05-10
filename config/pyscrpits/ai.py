@@ -10,6 +10,9 @@ sys.stdout.reconfigure(encoding='utf-8')
 def orig_para(para):
     para= para.replace("₹"," ").replace("ℳ","/n")
     return para
+arg=orig_para(sys.argv[1])
+
+
 from openai import OpenAI
 
 # client = OpenAI(
@@ -38,5 +41,4 @@ def oneround(inp):
     )
 
     print(completion.choices[0].message.content,end="")
-arg=sys.argv[1]
-oneround(orig_para(arg))
+oneround(arg)

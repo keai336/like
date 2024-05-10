@@ -10,6 +10,8 @@ sys.stdout.reconfigure(encoding='utf-8')
 def orig_para(para):
     para= para.replace("₹"," ").replace("ℳ","/n")
     return para
+arg=orig_para(sys.argv[1])
+
 from openai import OpenAI
 import os
 api_key="sk-3sAIcSk9UWxVcOglj5xTy0Lr8EIrHtUaQ5j7M1c22bkVS3cq"
@@ -38,5 +40,4 @@ def oneround(inp):
     print(completion.choices[0].message.content,end="")
 
 # 接收并打印传递的参数
-arg=sys.argv[1]
-oneround(orig_para(arg))
+oneround(arg)

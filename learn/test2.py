@@ -50,4 +50,5 @@ sys.stdout.reconfigure(encoding='utf-8')
 # 接收并打印传递的参数
 oneround("我们玩一个游戏,你给我一个六级英语单词,我回答中文翻译,如果对了,给我加一分,如果错了,游戏结束,结算我的积分")
 while True:
-    oneround(input("~"))
+#     oneround(input("~"))
+      print(input("~"))
